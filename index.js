@@ -14,30 +14,31 @@ function changeData(data, timeFrame, time) {
     });
 }
 
-timeFrames.forEach((timeFrame) => {
-    timeFrame.addEventListener('click', (e) => {
+const handleClickTimeFrame = (e) => {
+    currentTimeFrame.classList.remove('active');
 
-        currentTimeFrame.classList.remove('active');
+    e.target.classList.add('active')
+    currentTimeFrame = e.target
+    const timeFrameName = e.target.textContent.toLowerCase()
 
-        e.target.classList.add('active')
-        currentTimeFrame = e.target
-        const timeFrameName = e.target.textContent.toLowerCase()
-
-        fetch('data.json')
-        .then((res) => res.json())
-        .then((data) => {
-            let previous
-            switch (timeFrameName) {
-                case 'daily':
-                    previous = 'Yesterday'
-                    break;
-                case 'weekly':
-                    previous = 'Last Week'
-                    break;
-                case 'monthly':
-                    previous = 'Last Month'
-            }
-            changeData(data, timeFrameName, previous)
-        })
+    fetch('data.json')
+    .then((res) => res.json())
+    .then((data) => {
+        let previous
+        switch (timeFrameName) {
+            case 'daily':
+                previous = 'Yesterday'
+                break;
+            case 'weekly':
+                previous = 'Last Week'
+                break;
+            case 'monthly':
+                previous = 'Last Month'
+        }
+        changeData(data, timeFrameName, previous)
     })
+}
+
+timeFrames.forEach((timeFrame) => {
+    timeFrame.addEventListener('click', handleClickTimeFrame)
 })
